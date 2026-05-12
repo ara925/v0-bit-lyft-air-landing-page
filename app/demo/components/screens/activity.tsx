@@ -22,7 +22,7 @@ const PLAYBOOK_ACTIVITY = [
   { id: "PB-217", name: "Endpoint Isolation Request", integration: "Defender", description: "Generated endpoint isolation request and attached telemetry to case #4816.", status: "Queued", duration: "Pending", actor: "Policy: Active Malware Alert", time: "Yesterday" },
 ]
 
-export default function ActivityScreen() {
+export default function ActivityScreen({ dark = false }: { dark?: boolean }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Actions")
   const [search, setSearch] = useState("")
   const [spinning, setSpinning] = useState(false)

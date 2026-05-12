@@ -64,7 +64,7 @@ interface RunState {
   note?: string
 }
 
-export default function PlaybooksScreen({ onNavigate }: Props) {
+export default function PlaybooksScreen({ onNavigate, dark = false }: Props & { dark?: boolean }) {
   const [search, setSearch] = useState("")
   const [spinning, setSpinning] = useState(false)
   const [runStates, setRunStates] = useState<Record<string, RunState>>({})

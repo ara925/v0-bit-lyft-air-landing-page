@@ -51,7 +51,7 @@ function ReportRow({ report, onDownload, downloading }: { report: Report; onDown
   )
 }
 
-export default function ReportsScreen() {
+export default function ReportsScreen({ dark = false }: { dark?: boolean }) {
   const [downloading, setDownloading] = useState<string | null>(null)
   const [lastDownloaded, setLastDownloaded] = useState<string | null>(null)
 
