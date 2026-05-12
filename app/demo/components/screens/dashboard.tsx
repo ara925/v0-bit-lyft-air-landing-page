@@ -212,7 +212,7 @@ export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
                 <span className={`text-[15px] font-medium ${txtPri}`}>Recent Cases</span>
                 <button onClick={() => setActiveTab("Case Management")} className="text-sm text-[#3b82f6] hover:underline">View all</button>
               </div>
-              <div className={`divide-y ${border}`}>
+              <div className={`divide-y ${dark ? "divide-[#1e2028]" : "divide-[#d7dce3]"}`}>
                 {CASES.map((item) => (
                   <button key={item.id} onClick={() => { setSelectedCase(item); setActiveTab("Case Management") }} className={`grid w-full items-center gap-4 px-5 py-3.5 text-left transition-colors ${bgHover}`} style={{ gridTemplateColumns: ".5fr 1.5fr .6fr .75fr .6fr" }}>
                     <span className={`font-mono text-sm ${txtSub}`}>#{item.id}</span>

@@ -58,6 +58,7 @@ export default function DemoPage() {
   return (
     <div
       className={`demo-product-shell flex h-screen w-screen gap-2 overflow-hidden p-2 ${shell}`}
+      data-demo-theme={dark ? "dark" : "light"}
       style={{ fontFamily: "var(--font-figtree), ui-sans-serif, system-ui, sans-serif" }}
     >
       <DemoSidebar active={screen} onNavigate={navigate} collapsed={collapsed} dark={dark} />
