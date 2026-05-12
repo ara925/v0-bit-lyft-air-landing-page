@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DemoSidebar from "./components/sidebar"
 import DemoTopBar from "./components/topbar"
 import HomeScreen from "./components/screens/home"
@@ -14,31 +14,52 @@ import ReportsScreen from "./components/screens/reports"
 
 export type DemoScreen = "home" | "dashboard" | "log-search" | "playbooks" | "actions" | "activity" | "management" | "reports"
 
+const SCREENS: DemoScreen[] = ["home", "dashboard", "log-search", "playbooks", "actions", "activity", "management", "reports"]
+
 export default function DemoPage() {
   const [screen, setScreen] = useState<DemoScreen>("home")
   const [collapsed, setCollapsed] = useState(false)
 
+  useEffect(() => {
+    function applyHashScreen() {
+      const hashScreen = window.location.hash.replace("#", "") as DemoScreen
+      if (SCREENS.includes(hashScreen)) setScreen(hashScreen)
+    }
+
+    applyHashScreen()
+    window.addEventListener("hashchange", applyHashScreen)
+    return () => window.removeEventListener("hashchange", applyHashScreen)
+  }, [])
+
+  function navigate(nextScreen: DemoScreen) {
+    setScreen(nextScreen)
+    window.history.replaceState(null, "", `#${nextScreen}`)
+  }
+
   const titles: Record<DemoScreen, string> = {
     home: "Home",
-    dashboard: "Dashboard",
-    "log-search": "Log Search",
+    dashboard: "AIR > Overview",
+    "log-search": "Search",
     playbooks: "Playbooks",
     actions: "Actions",
-    activity: "Activity",
-    management: "Management",
-    reports: "Reports",
+    activity: "Activity > Actions",
+    management: "Integrations",
+    reports: "Report > AIR",
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#0d0d0d] text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-      <DemoSidebar active={screen} onNavigate={setScreen} collapsed={collapsed} />
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+    <div
+      className="demo-product-shell flex h-screen w-screen gap-2 overflow-hidden bg-[#f6f7f9] p-2 text-[#070707]"
+      style={{ fontFamily: "var(--font-figtree), ui-sans-serif, system-ui, sans-serif" }}
+    >
+      <DemoSidebar active={screen} onNavigate={navigate} collapsed={collapsed} />
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-[#d9dde5] bg-[#f6f7f9]">
         <DemoTopBar title={titles[screen]} onToggle={() => setCollapsed((v) => !v)} />
-        <div className="flex-1 overflow-y-auto">
-          {screen === "home"       && <HomeScreen onNavigate={setScreen} />}
+        <div className="demo-content-scroll flex-1 overflow-y-auto">
+          {screen === "home"       && <HomeScreen onNavigate={navigate} />}
           {screen === "dashboard"  && <DashboardScreen />}
           {screen === "log-search" && <LogSearchScreen />}
-          {screen === "playbooks"  && <PlaybooksScreen onNavigate={setScreen} />}
+          {screen === "playbooks"  && <PlaybooksScreen onNavigate={navigate} />}
           {screen === "actions"    && <ActionsScreen />}
           {screen === "activity"   && <ActivityScreen />}
           {screen === "management" && <ManagementScreen />}
