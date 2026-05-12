@@ -13,7 +13,7 @@ const RESULTS = [
   { time: "2026-05-12 09:11:50", user: "ops.team@company1.example", source: "SharepointLog", event: "Mass file download", severity: "Low", ip: "10.2.8.91" },
 ]
 
-export default function LogSearchScreen() {
+export default function LogSearchScreen({ dark = false }: { dark?: boolean }) {
   const [eventTypes, setEventTypes] = useState(["sharepoint", "exchange", "azure_ad"])
   const [notMode, setNotMode] = useState(false)
   const [searching, setSearching] = useState(false)

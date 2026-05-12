@@ -39,38 +39,44 @@ function MetricCard({
   period = "Last 7 days",
   tone = "neutral",
   onClick,
+  dark = false,
 }: {
   label: string
   value: string | number
   period?: string
   tone?: "neutral" | "blue" | "green" | "red" | "amber"
   onClick?: () => void
+  dark?: boolean
 }) {
   const toneClass = {
-    neutral: "text-[#070707]",
-    blue: "text-[#2563eb]",
-    green: "text-[#166534]",
-    red: "text-[#b42318]",
-    amber: "text-[#92400e]",
+    neutral: dark ? "text-[#e8eaf0]" : "text-[#070707]",
+    blue:    "text-[#3b82f6]",
+    green:   dark ? "text-[#4ade80]" : "text-[#166534]",
+    red:     dark ? "text-[#f87171]" : "text-[#b42318]",
+    amber:   dark ? "text-[#fbbf24]" : "text-[#92400e]",
   }[tone]
+
+  const bg     = dark ? "bg-[#13141a] border-[#1e2028]" : "bg-white border-[#d7dce3]"
+  const hover  = dark ? "hover:bg-[#1e2028]" : "hover:bg-[#f8fafc]"
+  const txtSub = dark ? "text-[#7c8394]" : "text-[#697386]"
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`rounded border border-[#d7dce3] bg-white p-5 text-left transition-colors ${onClick ? "hover:bg-[#f8fafc]" : "cursor-default"}`}
+      className={`rounded border p-5 text-left transition-colors ${bg} ${onClick ? hover : "cursor-default"}`}
     >
       <div className="mb-2 flex min-w-0 items-center justify-between gap-2">
-        <span className="truncate text-[15px] text-[#5f6472]">{label}</span>
-        <SlidersHorizontal className="h-4 w-4 flex-shrink-0 text-[#697386]" />
+        <span className={`truncate text-[15px] ${txtSub}`}>{label}</span>
+        <SlidersHorizontal className={`h-4 w-4 flex-shrink-0 ${txtSub}`} />
       </div>
-      <p className="mb-3 text-xs text-[#697386]">{period}</p>
+      <p className={`mb-3 text-xs ${txtSub}`}>{period}</p>
       <span className={`text-3xl font-bold ${toneClass}`}>{value}</span>
     </button>
   )
 }
 
-export default function DashboardScreen() {
+export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("Overview")
   const [lastUpdated, setLastUpdated] = useState("less than a minute ago")
   const [spinning, setSpinning] = useState(false)
@@ -115,17 +121,27 @@ export default function DashboardScreen() {
 
   const periodMultiplier = period === "Last 30 days" ? 4 : period === "Last 90 days" ? 12 : 1
 
+  // Dark mode tokens
+  const bg      = dark ? "bg-[#0d0d0f]"   : "bg-white"
+  const bgCard  = dark ? "bg-[#13141a]"   : "bg-white"
+  const bgMuted = dark ? "bg-[#1a1b22]"   : "bg-[#fbfbfc]"
+  const bgHover = dark ? "hover:bg-[#1e2028]" : "hover:bg-[#f8fafc]"
+  const border  = dark ? "border-[#1e2028]" : "border-[#d7dce3]"
+  const txtPri  = dark ? "text-[#e8eaf0]" : "text-[#070707]"
+  const txtSub  = dark ? "text-[#7c8394]" : "text-[#5f6472]"
+  const input   = dark ? `bg-[#13141a] ${border} text-[#e8eaf0]` : "bg-white border-[#d7dce3] text-[#070707]"
+
   return (
-    <div className="p-6">
+    <div className={`p-6 ${bg} min-h-full`}>
       <div className="mb-5">
-        <h1 className="mb-4 text-[32px] font-bold leading-tight text-[#070707]">Overview</h1>
-        <div className="flex items-center gap-1 border-b border-[#d7dce3]">
+        <h1 className={`mb-4 text-[32px] font-bold leading-tight ${txtPri}`}>Overview</h1>
+        <div className={`flex items-center gap-1 border-b ${border}`}>
           {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`-mb-px border-b-2 px-4 py-2 text-[15px] font-medium transition-colors ${
-                activeTab === tab ? "border-[#2563eb] text-[#070707]" : "border-transparent text-[#5f6472] hover:text-[#070707]"
+                activeTab === tab ? "border-[#2563eb] text-[#2563eb]" : `border-transparent ${txtSub} hover:${txtPri}`
               }`}
             >
               {tab}
@@ -138,17 +154,17 @@ export default function DashboardScreen() {
         <>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <label className="text-sm text-[#5f6472]">
+              <label className={`text-sm ${txtSub}`}>
                 Limit
-                <select value={limit} onChange={(event) => setLimit(event.target.value)} className="ml-2 h-9 rounded border border-[#d7dce3] bg-white px-3 text-[#070707] outline-none focus:border-[#2563eb]">
+                <select value={limit} onChange={(event) => setLimit(event.target.value)} className={`ml-2 h-9 rounded border px-3 outline-none focus:border-[#2563eb] ${input}`}>
                   <option>100</option>
                   <option>250</option>
                   <option>500</option>
                 </select>
               </label>
-              <label className="text-sm text-[#5f6472]">
+              <label className={`text-sm ${txtSub}`}>
                 Period
-                <select value={period} onChange={(event) => setPeriod(event.target.value)} className="ml-2 h-9 rounded border border-[#d7dce3] bg-white px-3 text-[#070707] outline-none focus:border-[#2563eb]">
+                <select value={period} onChange={(event) => setPeriod(event.target.value)} className={`ml-2 h-9 rounded border px-3 outline-none focus:border-[#2563eb] ${input}`}>
                   <option>Last 7 days</option>
                   <option>Last 30 days</option>
                   <option>Last 90 days</option>
@@ -156,11 +172,11 @@ export default function DashboardScreen() {
               </label>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[15px] text-[#5f6472]">Last updated: {lastUpdated}</span>
-              <button onClick={refresh} className="rounded border border-[#d7dce3] bg-white p-2 text-[#070707] hover:bg-[#f8fafc]" aria-label="Refresh dashboard">
+              <span className={`text-[15px] ${txtSub}`}>Last updated: {lastUpdated}</span>
+              <button onClick={refresh} className={`rounded border p-2 transition-colors ${bgCard} ${border} ${txtPri} ${bgHover}`} aria-label="Refresh dashboard">
                 <RefreshCw className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} />
               </button>
-              <button onClick={() => setShowAddWidget(true)} className="inline-flex h-9 items-center gap-1.5 rounded border border-[#d7dce3] bg-white px-3 text-sm text-[#070707] transition-colors hover:bg-[#f8fafc]">
+              <button onClick={() => setShowAddWidget(true)} className={`inline-flex h-9 items-center gap-1.5 rounded border px-3 text-sm transition-colors ${bgCard} ${border} ${txtPri} ${bgHover}`}>
                 <Plus className="h-4 w-4" />
                 Add Widget
               </button>
@@ -168,18 +184,18 @@ export default function DashboardScreen() {
           </div>
 
           <div className="mb-4 grid grid-cols-3 gap-4">
-            <MetricCard label="Log Volume" value={`${(101.21 * periodMultiplier).toFixed(2)} KB`} />
-            <MetricCard label="MTTD Manual" value="0" />
-            <MetricCard label="MTTR Manual" value="0" />
-            <MetricCard label="Total Events Processed" value={41 * periodMultiplier} tone="blue" onClick={() => setActiveTab("Case Management")} />
-            <MetricCard label="MTTD Automated" value="0.9s" tone="blue" />
-            <MetricCard label="MTTR Automated" value="1.2s" tone="green" />
+            <MetricCard label="Log Volume" value={`${(101.21 * periodMultiplier).toFixed(2)} KB`} dark={dark} />
+            <MetricCard label="MTTD Manual" value="0" dark={dark} />
+            <MetricCard label="MTTR Manual" value="0" dark={dark} />
+            <MetricCard label="Total Events Processed" value={41 * periodMultiplier} tone="blue" onClick={() => setActiveTab("Case Management")} dark={dark} />
+            <MetricCard label="MTTD Automated" value="0.9s" tone="blue" dark={dark} />
+            <MetricCard label="MTTR Automated" value="1.2s" tone="green" dark={dark} />
           </div>
 
           {addedWidgets.map((widget) => (
-            <div key={widget} className="mb-4 flex items-center justify-between rounded border border-[#d7dce3] bg-white p-5">
-              <span className="text-[15px] font-medium text-[#070707]">{widget}</span>
-              <button onClick={() => setAddedWidgets((items) => items.filter((item) => item !== widget))} className="rounded p-1 text-[#697386] hover:bg-[#f2f4f7]" aria-label={`Remove ${widget}`}>
+            <div key={widget} className={`mb-4 flex items-center justify-between rounded border p-5 ${bgCard} ${border}`}>
+              <span className={`text-[15px] font-medium ${txtPri}`}>{widget}</span>
+              <button onClick={() => setAddedWidgets((items) => items.filter((item) => item !== widget))} className={`rounded p-1 ${txtSub} ${bgHover}`} aria-label={`Remove ${widget}`}>
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -187,23 +203,23 @@ export default function DashboardScreen() {
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-4">
-              <MetricCard label="High Priority Cases" value={3} tone="red" onClick={() => setActiveTab("Case Management")} />
-              <MetricCard label="Medium Priority Cases" value={2} tone="amber" onClick={() => setActiveTab("Case Management")} />
-              <MetricCard label="Low Priority Cases" value={0} onClick={() => setActiveTab("Case Management")} />
+              <MetricCard label="High Priority Cases" value={3} tone="red" onClick={() => setActiveTab("Case Management")} dark={dark} />
+              <MetricCard label="Medium Priority Cases" value={2} tone="amber" onClick={() => setActiveTab("Case Management")} dark={dark} />
+              <MetricCard label="Low Priority Cases" value={0} onClick={() => setActiveTab("Case Management")} dark={dark} />
             </div>
-            <div className="col-span-2 overflow-hidden rounded border border-[#d7dce3] bg-white">
-              <div className="flex items-center justify-between border-b border-[#d7dce3] bg-[#fbfbfc] px-5 py-4">
-                <span className="text-[15px] font-medium text-[#070707]">Recent Cases</span>
-                <button onClick={() => setActiveTab("Case Management")} className="text-sm text-[#2563eb] hover:underline">View all</button>
+            <div className={`col-span-2 overflow-hidden rounded border ${border} ${bgCard}`}>
+              <div className={`flex items-center justify-between border-b px-5 py-4 ${border} ${bgMuted}`}>
+                <span className={`text-[15px] font-medium ${txtPri}`}>Recent Cases</span>
+                <button onClick={() => setActiveTab("Case Management")} className="text-sm text-[#3b82f6] hover:underline">View all</button>
               </div>
-              <div className="divide-y divide-[#d7dce3]">
+              <div className={`divide-y ${border}`}>
                 {CASES.map((item) => (
-                  <button key={item.id} onClick={() => { setSelectedCase(item); setActiveTab("Case Management") }} className="grid w-full items-center gap-4 px-5 py-3.5 text-left transition-colors hover:bg-[#f8fafc]" style={{ gridTemplateColumns: ".5fr 1.5fr .6fr .75fr .6fr" }}>
-                    <span className="font-mono text-sm text-[#697386]">#{item.id}</span>
-                    <span className="truncate text-[15px] text-[#070707]">{item.title}</span>
+                  <button key={item.id} onClick={() => { setSelectedCase(item); setActiveTab("Case Management") }} className={`grid w-full items-center gap-4 px-5 py-3.5 text-left transition-colors ${bgHover}`} style={{ gridTemplateColumns: ".5fr 1.5fr .6fr .75fr .6fr" }}>
+                    <span className={`font-mono text-sm ${txtSub}`}>#{item.id}</span>
+                    <span className={`truncate text-[15px] ${txtPri}`}>{item.title}</span>
                     <span className={`w-fit rounded border px-2 py-0.5 text-xs ${item.priority === "High" ? "border-[#fecdca] bg-[#fef3f2] text-[#b42318]" : "border-[#fedf89] bg-[#fffaeb] text-[#92400e]"}`}>{item.priority}</span>
-                    <span className="w-fit rounded border border-[#d7dce3] bg-[#f7f8fa] px-2 py-0.5 text-xs text-[#5f6472]">{caseStatuses[item.id]}</span>
-                    <span className="text-xs text-[#697386]">{item.age}</span>
+                    <span className={`w-fit rounded border px-2 py-0.5 text-xs ${border} ${dark ? "bg-[#1a1b22] text-[#7c8394]" : "bg-[#f7f8fa] text-[#5f6472]"}`}>{caseStatuses[item.id]}</span>
+                    <span className={`text-xs ${txtSub}`}>{item.age}</span>
                   </button>
                 ))}
               </div>
@@ -354,15 +370,20 @@ export default function DashboardScreen() {
 
       {activeTab === "Automation Settings" && (
         <div className="max-w-3xl space-y-3">
-          <p className="mb-5 text-[15px] text-[#5f6472]">Configure how AIR handles automated containment, approvals, and notifications.</p>
+          <p className={`mb-5 text-[15px] ${txtSub}`}>Configure how AIR handles automated containment, approvals, and notifications.</p>
           {automationSettings.map((setting, index) => (
-            <div key={setting.label} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded border border-[#d7dce3] bg-white p-4 transition-colors hover:bg-[#f8fafc]">
+            <div key={setting.label} className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded border p-4 transition-colors ${bgCard} ${border} ${bgHover}`}>
               <div className="flex min-w-0 items-center gap-3">
-                {setting.label.includes("Notify") ? <Bell className="h-4 w-4 text-[#2563eb]" /> : setting.label.includes("approval") ? <Shield className="h-4 w-4 text-[#2563eb]" /> : <AlertCircle className="h-4 w-4 text-[#2563eb]" />}
-                <p className="min-w-0 text-[15px] text-[#070707]">{setting.label}</p>
+                {setting.label.includes("Notify") ? <Bell className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" /> : setting.label.includes("approval") ? <Shield className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" /> : <AlertCircle className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" />}
+                <p className={`min-w-0 text-[15px] ${txtPri}`}>{setting.label}</p>
               </div>
-              <button onClick={() => toggleAutomation(index)} className={`relative h-6 w-11 flex-shrink-0 overflow-hidden rounded-full transition-colors ${setting.enabled ? "bg-[#2563eb]" : "bg-[#d7dce3]"}`} aria-label={`Toggle ${setting.label}`} aria-pressed={setting.enabled}>
-                <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${setting.enabled ? "translate-x-5" : "translate-x-0"}`} />
+              <button
+                onClick={() => toggleAutomation(index)}
+                className={`relative h-6 w-11 flex-shrink-0 overflow-hidden rounded-full transition-colors ${setting.enabled ? "bg-[#2563eb]" : dark ? "bg-[#2a2d3a]" : "bg-[#d7dce3]"}`}
+                aria-label={`Toggle ${setting.label}`}
+                aria-pressed={setting.enabled}
+              >
+                <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-sm transition-transform ${setting.enabled ? "translate-x-[22px]" : "translate-x-[3px]"}`} />
               </button>
             </div>
           ))}
