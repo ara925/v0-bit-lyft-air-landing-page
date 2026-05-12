@@ -49,11 +49,11 @@ export default function DemoPage() {
 
   return (
     <div
-      className="demo-product-shell flex h-screen w-screen gap-2 overflow-hidden bg-[#f6f7f9] p-2 text-[#070707]"
+      className="demo-product-shell flex h-screen w-screen gap-2 overflow-hidden bg-[#0d0d0d] p-2 text-[#f8fafc]"
       style={{ fontFamily: "var(--font-figtree), ui-sans-serif, system-ui, sans-serif" }}
     >
       <DemoSidebar active={screen} onNavigate={navigate} collapsed={collapsed} />
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-[#d9dde5] bg-[#f6f7f9]">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-[#d7dce3] bg-[#0d0d0d]">
         <DemoTopBar title={titles[screen]} onToggle={() => setCollapsed((v) => !v)} />
         <div className="demo-content-scroll flex-1 overflow-y-auto">
           {screen === "home"       && <HomeScreen onNavigate={navigate} />}
