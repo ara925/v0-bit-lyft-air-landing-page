@@ -52,7 +52,7 @@ interface Props {
   onNavigate: (s: DemoScreen) => void
 }
 
-export default function HomeScreen({ onNavigate }: Props) {
+export default function HomeScreen({ onNavigate, dark = false }: Props & { dark?: boolean }) {
   const [completed, setCompleted] = useState<string[]>(["integration", "policies"])
   const [skipped, setSkipped] = useState<string[]>([])
 

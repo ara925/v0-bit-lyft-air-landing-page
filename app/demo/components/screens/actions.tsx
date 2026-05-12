@@ -42,7 +42,7 @@ const NEEDS_USER = [
 
 const NEEDS_POLICY = ["Assign User to Conditional Access Policy", "Get Conditional Access Policy Details"]
 
-export default function ActionsScreen() {
+export default function ActionsScreen({ dark = false }: { dark?: boolean }) {
   const [search, setSearch] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("All")
   const [runStates, setRunStates] = useState<Record<string, RunState>>({})
