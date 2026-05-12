@@ -2,16 +2,16 @@
 
 import type { DemoScreen } from "../page"
 import {
-  Home,
-  LayoutDashboard,
-  Search,
-  BookOpen,
-  Play,
   Activity,
-  Settings,
+  BookOpen,
+  ChevronsUpDown,
   FileText,
   HelpCircle,
-  ExternalLink,
+  Home,
+  LayoutDashboard,
+  Play,
+  Search,
+  Settings,
 } from "lucide-react"
 
 interface Props {
@@ -42,45 +42,45 @@ const NAV = [
   },
   {
     group: "Integrations",
-    items: [
-      { id: "management" as DemoScreen, label: "Management", icon: Settings },
-    ],
+    items: [{ id: "management" as DemoScreen, label: "Management", icon: Settings }],
   },
   {
     group: "Reports",
-    items: [
-      { id: "reports" as DemoScreen, label: "Reports", icon: FileText },
-    ],
+    items: [{ id: "reports" as DemoScreen, label: "Reports", icon: FileText }],
   },
 ]
 
 export default function DemoSidebar({ active, onNavigate, collapsed }: Props) {
   return (
     <aside
-      className="flex flex-col border-r border-white/[0.07] bg-[#111111] transition-all duration-300 flex-shrink-0"
-      style={{ width: collapsed ? 60 : 220 }}
+      className="flex flex-shrink-0 flex-col rounded-lg bg-[#fbfbfc] text-[#101828] transition-all duration-300"
+      style={{ width: collapsed ? 64 : 240 }}
     >
-      {/* Org header */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-white/[0.07]" style={{ minHeight: 64 }}>
-        <div className="w-8 h-8 rounded-md bg-[#2261db] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-          BA
-        </div>
-        {!collapsed && (
-          <div className="min-w-0">
-            <p className="text-white text-sm font-semibold truncate">BitLyft AIR</p>
-            <p className="text-gray-500 text-[11px] truncate">Demo Workspace</p>
+      <div className="px-2 pb-4 pt-4">
+        {!collapsed && <p className="mb-2 px-2 text-[13px] text-[#5f6472]">Organization</p>}
+        <button
+          onClick={() => onNavigate("home")}
+          className="flex h-12 w-full items-center gap-2 rounded bg-[#c9f3fb] px-2 text-left transition-colors hover:bg-[#bcecf6]"
+        >
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-[#2563eb] text-xs font-semibold text-[#fff]">
+            C1
           </div>
-        )}
+          {!collapsed && (
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold leading-4 text-[#070707]">Company #1</p>
+              <p className="truncate text-xs leading-4 text-[#344054]">Admin</p>
+            </div>
+          )}
+        </button>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto py-4 space-y-5">
+      <div className="mx-2 border-t border-[#d7dce3]" />
+
+      <nav className="flex-1 space-y-5 overflow-y-auto px-2 py-5">
         {NAV.map(({ group, items }) => (
           <div key={group}>
-            {!collapsed && (
-              <p className="text-[10px] text-gray-600 uppercase tracking-widest font-medium px-4 mb-1.5">{group}</p>
-            )}
-            <div className="space-y-0.5 px-2">
+            {!collapsed && <p className="mb-2 px-2 text-[13px] text-[#697386]">{group}</p>}
+            <div className="space-y-1">
               {items.map(({ id, label, icon: Icon }) => {
                 const isActive = active === id
                 return (
@@ -88,13 +88,12 @@ export default function DemoSidebar({ active, onNavigate, collapsed }: Props) {
                     key={id}
                     onClick={() => onNavigate(id)}
                     title={collapsed ? label : undefined}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                      isActive
-                        ? "bg-[#2261db]/20 text-white border border-[#2261db]/40"
-                        : "text-gray-400 hover:bg-white/[0.05] hover:text-white border border-transparent"
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex h-8 w-full items-center gap-2 rounded px-2 text-[15px] transition-colors ${
+                      isActive ? "bg-[#f0f1f3] text-[#2563eb]" : "text-[#14171f] hover:bg-[#f2f4f7]"
                     }`}
                   >
-                    <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-[#00cfff]" : ""}`} />
+                    <Icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-[#2563eb]" : "text-[#111827]"}`} />
                     {!collapsed && <span className="truncate">{label}</span>}
                   </button>
                 )
@@ -104,49 +103,47 @@ export default function DemoSidebar({ active, onNavigate, collapsed }: Props) {
         ))}
       </nav>
 
-      {/* Bottom */}
-      <div className="border-t border-white/[0.07] px-2 py-3 space-y-0.5">
+      <div className="space-y-1 px-2 pb-4 pt-2">
         {!collapsed && (
           <>
-            <p className="text-[10px] text-gray-600 uppercase tracking-widest font-medium px-3 mb-1.5">Other Links</p>
+            <p className="mb-2 px-2 text-[13px] text-[#697386]">Other Links</p>
             <a
-              href="https://bitlyft.com/support"
+              href="https://bitlyft.atlassian.net/servicedesk/customer/portal/5/group/19"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-white/[0.05] hover:text-white transition-all"
+              className="flex h-8 w-full items-center gap-2 rounded px-2 text-[15px] text-[#14171f] transition-colors hover:bg-[#f2f4f7]"
             >
-              <HelpCircle className="w-4 h-4 flex-shrink-0" />
+              <HelpCircle className="h-4 w-4 flex-shrink-0" />
               <span>Support Portal</span>
-              <ExternalLink className="w-3 h-3 ml-auto opacity-50" />
             </a>
             <a
-              href="https://bitlyft.com/resources"
+              href="https://bitlyft.atlassian.net/wiki/spaces/BAHD/overview?homepageId=824672628"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-white/[0.05] hover:text-white transition-all"
+              className="flex h-8 w-full items-center gap-2 rounded px-2 text-[15px] text-[#14171f] transition-colors hover:bg-[#f2f4f7]"
             >
-              <FileText className="w-4 h-4 flex-shrink-0" />
+              <FileText className="h-4 w-4 flex-shrink-0" />
               <span>Help Docs</span>
-              <ExternalLink className="w-3 h-3 ml-auto opacity-50" />
             </a>
           </>
         )}
 
-        {/* User */}
-        <div className="flex items-center gap-3 px-3 py-2 mt-1">
-          <div className="w-7 h-7 rounded-full bg-[#2261db]/40 border border-[#2261db]/50 flex items-center justify-center text-[10px] font-bold text-[#00cfff] flex-shrink-0">
+        <button className="mt-3 flex h-12 w-full items-center gap-2 rounded px-2 text-left transition-colors hover:bg-[#f2f4f7]">
+          <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-[#f3f4f6] text-xs font-semibold text-[#344054]">
             SA
+            <span className="absolute -right-1 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#ef2424] text-[11px] font-semibold text-[#fff]">
+              3
+            </span>
           </div>
           {!collapsed && (
-            <div className="min-w-0">
-              <p className="text-white text-xs font-medium truncate">Security Admin</p>
-              <p className="text-gray-500 text-[10px] truncate">demo@bitlyftair.ai</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold leading-4 text-[#070707]">Security Admin</p>
+              <p className="truncate text-xs leading-4 text-[#344054]">admin@company1.example</p>
             </div>
           )}
-        </div>
-        {!collapsed && (
-          <p className="text-center text-[10px] text-gray-700 pt-1">v1.25.12</p>
-        )}
+          {!collapsed && <ChevronsUpDown className="h-4 w-4 flex-shrink-0 text-[#14171f]" />}
+        </button>
+        {!collapsed && <p className="pt-2 text-center text-xs text-[#14171f]">v1.25.12</p>}
       </div>
     </aside>
   )

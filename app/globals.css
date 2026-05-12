@@ -218,3 +218,105 @@
     scroll-behavior: smooth;
   }
 }
+
+.demo-product-shell {
+  color-scheme: light;
+}
+
+.demo-product-shell .rounded-xl,
+.demo-product-shell .rounded-2xl {
+  border-radius: 8px !important;
+}
+
+.demo-product-shell [class*="bg-[#0d0d0d]"],
+.demo-product-shell [class*="bg-[#0f0f0f]"],
+.demo-product-shell [class*="bg-[#111]"],
+.demo-product-shell [class*="bg-[#111111]"],
+.demo-product-shell [class*="bg-[#131313]"],
+.demo-product-shell [class*="bg-[#151515]"],
+.demo-product-shell [class*="bg-[#161616]"],
+.demo-product-shell [class*="bg-[#1a1a1a]"],
+.demo-product-shell [class*="bg-[#1e1e1e]"] {
+  background-color: #ffffff !important;
+}
+
+.demo-product-shell [class*="bg-[#2261db]/"] {
+  background-color: #eff6ff !important;
+}
+
+.demo-product-shell [class*="text-white"] {
+  color: #070707 !important;
+}
+
+.demo-product-shell button[class~="bg-[#2261db]"],
+.demo-product-shell [class~="bg-[#2261db]"][class*="text-white"],
+.demo-product-shell [class~="bg-[#2563eb]"][class*="text-white"],
+.demo-product-shell [class~="bg-emerald-500"][class*="text-white"],
+.demo-product-shell [class~="bg-red-500"][class*="text-white"] {
+  color: #ffffff !important;
+}
+
+.demo-product-shell [class*="text-[#00cfff]"] {
+  color: #2563eb !important;
+}
+
+.demo-product-shell [class*="text-gray-300"],
+.demo-product-shell [class*="text-gray-400"],
+.demo-product-shell [class*="text-gray-500"],
+.demo-product-shell [class*="text-gray-600"],
+.demo-product-shell [class*="text-gray-700"] {
+  color: #5f6472 !important;
+}
+
+.demo-product-shell [class*="border-white/"],
+.demo-product-shell [class*="divide-white/"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #d7dce3 !important;
+}
+
+.demo-product-shell input,
+.demo-product-shell select,
+.demo-product-shell textarea {
+  background-color: #ffffff !important;
+  border-color: #d7dce3 !important;
+  color: #070707 !important;
+}
+
+.demo-product-shell input::placeholder,
+.demo-product-shell textarea::placeholder {
+  color: #697386 !important;
+}
+
+@media (max-width: 760px) {
+  .demo-product-shell {
+    gap: 0;
+    padding: 0;
+  }
+
+  .demo-product-shell > aside {
+    display: none;
+  }
+
+  .demo-product-shell > div {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .demo-product-shell header > div:last-child {
+    display: none;
+  }
+
+  .demo-product-shell .demo-content-scroll > div {
+    min-width: 0;
+  }
+
+  .demo-product-shell .home-step-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .demo-product-shell .home-step-actions {
+    margin-left: 48px;
+    width: calc(100% - 48px);
+    justify-content: flex-start;
+  }
+}

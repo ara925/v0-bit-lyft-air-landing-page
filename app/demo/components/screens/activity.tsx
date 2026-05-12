@@ -1,166 +1,148 @@
 "use client"
 
-import { useState } from "react"
-import { CheckCircle2, AlertCircle, Info, RefreshCw, ChevronRight, Download, X } from "lucide-react"
+import { useMemo, useState } from "react"
+import { CheckCircle2, Clock3, Filter, Loader2, RefreshCw, Search, ShieldAlert } from "lucide-react"
 
-const INITIAL_EVENTS = [
-  { id: 1, type: "success", title: "Playbook completed: Credential Stuffing Response", detail: "Session revoked, account disabled, case #4821 created.", time: "2 min ago", user: "AIR Automation", source: "Entra ID", caseId: "4821", actions: ["Revoke User Sign-In Sessions", "Disable User Account"], duration: "1.2s" },
-  { id: 2, type: "success", title: "Action executed: Revoke User Sign-In Sessions", detail: "3 sessions revoked for j.morris@contoso.com via Graph API.", time: "14 min ago", user: "AIR Automation", source: "Entra ID", caseId: "4820", actions: ["Revoke User Sign-In Sessions"], duration: "0.9s" },
-  { id: 3, type: "alert", title: "Alert triggered: Impossible Travel Detected", detail: "User j.morris@contoso.com logged in from NYC then London 6 minutes apart.", time: "15 min ago", user: "Entra ID", source: "Entra ID", caseId: "4820", actions: [], duration: "—" },
-  { id: 4, type: "success", title: "Action executed: Remove Mailbox Forwarding Rule", detail: "Rule-4821 deleted from cfo@contoso.com mailbox.", time: "3 hr ago", user: "AIR Automation", source: "Microsoft 365", caseId: "4818", actions: ["Remove Mailbox Forwarding Rule"], duration: "1.4s" },
-  { id: 5, type: "alert", title: "Alert triggered: Suspicious Forwarding Rule", detail: "New inbox rule forwarding all mail to external@gmail.com detected on CFO mailbox.", time: "3 hr ago", user: "Microsoft 365", source: "Microsoft 365", caseId: "4818", actions: [], duration: "—" },
-  { id: 6, type: "info", title: "Policy updated: Credential Stuffing Detection", detail: "Threshold updated from 30 to 47 failed logins per 10 min window.", time: "5 hr ago", user: "Security Admin", source: "System", caseId: null, actions: [], duration: "—" },
-  { id: 7, type: "success", title: "Playbook completed: Phishing Email Containment", detail: "Email purged from 4 mailboxes, domain blocked at tenant level.", time: "5 hr ago", user: "AIR Automation", source: "Defender", caseId: "4817", actions: ["Purge Email", "Block Sender Domain"], duration: "3.4s" },
-  { id: 8, type: "alert", title: "Alert triggered: User-Reported Phishing", detail: "user@contoso.com reported a phishing email from noreply@contoso-secure.net.", time: "5 hr ago", user: "Microsoft Defender", source: "Defender", caseId: "4817", actions: [], duration: "—" },
-  { id: 9, type: "info", title: "Integration connected: Microsoft Defender", detail: "Microsoft Defender for Endpoint successfully connected and ingesting alerts.", time: "1 day ago", user: "Security Admin", source: "System", caseId: null, actions: [], duration: "—" },
-  { id: 10, type: "info", title: "New user invited: analyst@contoso.com", detail: "SOC Analyst role assigned. Onboarding email sent.", time: "2 days ago", user: "Security Admin", source: "System", caseId: null, actions: [], duration: "—" },
+const TABS = ["Actions", "Playbooks"] as const
+
+const ACTION_ACTIVITY = [
+  { id: "ACT-1042", name: "Revoke User Sign-In Sessions", integration: "Microsoft", description: "Revoked 3 active sessions for alex.rivera@company1.example.", status: "Completed", duration: "1.2s", actor: "Security Admin", time: "2 min ago" },
+  { id: "ACT-1041", name: "Remove Mailbox Forwarding Rule", integration: "Microsoft", description: "Removed external forwarding rule from finance@company1.example.", status: "Completed", duration: "1.8s", actor: "Policy: BEC Forwarding Rule", time: "14 min ago" },
+  { id: "ACT-1040", name: "Get User Sign-In Activity", integration: "Microsoft", description: "Collected 12 sign-in events for morgan.lee@company1.example.", status: "Completed", duration: "0.9s", actor: "Security Admin", time: "33 min ago" },
+  { id: "ACT-1039", name: "List Entra ID Risky Users", integration: "Microsoft", description: "Found 2 risky users with high or medium risk.", status: "Completed", duration: "0.7s", actor: "Scheduled check", time: "1h ago" },
+  { id: "ACT-1038", name: "Disable User Account", integration: "Microsoft", description: "Blocked sign-in for temp.vendor@company1.example after analyst approval.", status: "Completed", duration: "1.4s", actor: "Security Admin", time: "2h ago" },
+  { id: "ACT-1037", name: "List SharePoint Sites", integration: "Microsoft", description: "Indexed 11 SharePoint sites and identified 3 externally shared libraries.", status: "Completed", duration: "2.1s", actor: "Scheduled check", time: "3h ago" },
 ]
 
-const FILTERS = ["All", "Alerts", "Actions", "Info"]
+const PLAYBOOK_ACTIVITY = [
+  { id: "PB-221", name: "Microsoft Compromised User Accounts", integration: "Microsoft", description: "Revoked sessions, reset password, enabled MFA, and opened case #4821.", status: "Completed", duration: "8.4s", actor: "Policy: Credential Stuffing Detection", time: "12 min ago" },
+  { id: "PB-220", name: "Microsoft Phishing Email Containment", integration: "Microsoft", description: "Purged 26 matching messages and quarantined 2 sender domains.", status: "Completed", duration: "12.9s", actor: "Defender alert", time: "1h ago" },
+  { id: "PB-219", name: "SharePoint Data Exfiltration Review", integration: "Microsoft", description: "Collected file activity and restricted sharing for Project Atlas.", status: "Completed", duration: "9.8s", actor: "Policy: Mass File Download", time: "5h ago" },
+  { id: "PB-218", name: "Privileged Account Lockdown", integration: "Microsoft", description: "Revoked admin sessions and required re-authentication for 2 accounts.", status: "Completed", duration: "7.1s", actor: "Security Admin", time: "Yesterday" },
+  { id: "PB-217", name: "Endpoint Isolation Request", integration: "Defender", description: "Generated endpoint isolation request and attached telemetry to case #4816.", status: "Queued", duration: "Pending", actor: "Policy: Active Malware Alert", time: "Yesterday" },
+]
 
 export default function ActivityScreen() {
-  const [filter, setFilter] = useState("All")
+  const [tab, setTab] = useState<(typeof TABS)[number]>("Actions")
+  const [search, setSearch] = useState("")
   const [spinning, setSpinning] = useState(false)
-  const [expandedId, setExpandedId] = useState<number | null>(null)
-  const [dismissed, setDismissed] = useState<number[]>([])
-  const [events, setEvents] = useState(INITIAL_EVENTS)
+  const [refreshNote, setRefreshNote] = useState("Last updated: less than a minute ago")
+
+  const rows = tab === "Actions" ? ACTION_ACTIVITY : PLAYBOOK_ACTIVITY
+  const filtered = useMemo(
+    () => rows.filter((row) => `${row.id} ${row.name} ${row.integration} ${row.description} ${row.actor}`.toLowerCase().includes(search.toLowerCase())),
+    [rows, search]
+  )
 
   function refresh() {
     setSpinning(true)
-    setTimeout(() => {
+    setRefreshNote("Checking for new activity...")
+    window.setTimeout(() => {
       setSpinning(false)
-      // Simulate a new event
-      const newEvent = {
-        id: Date.now(),
-        type: "success" as const,
-        title: "Action executed: List Entra ID Risky Users",
-        detail: "Retrieved 2 risky users: j.morris@contoso.com (high), s.chen@contoso.com (medium).",
-        time: "just now",
-        user: "AIR Automation",
-        source: "Entra ID",
-        caseId: null,
-        actions: ["List Entra ID Risky Users"],
-        duration: "0.6s",
-      }
-      setEvents((e) => [newEvent, ...e])
-    }, 1000)
+      setRefreshNote("Last updated: just now")
+    }, 900)
   }
-
-  function dismiss(id: number) {
-    setDismissed((d) => [...d, id])
-  }
-
-  const filtered = events.filter((e) => {
-    if (dismissed.includes(e.id)) return false
-    if (filter === "All") return true
-    if (filter === "Alerts") return e.type === "alert"
-    if (filter === "Actions") return e.type === "success"
-    if (filter === "Info") return e.type === "info"
-    return true
-  })
 
   return (
     <div className="p-6">
-      <div className="flex items-start justify-between mb-5">
-        <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Activity</h1>
-          <p className="text-gray-500 text-sm">A live audit trail of all automated actions, alerts, and system events.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white border border-white/[0.08] hover:border-white/20 px-2.5 py-1.5 rounded-md transition-colors">
-            <Download className="w-3.5 h-3.5" /> Export
-          </button>
-          <button onClick={refresh} className="text-gray-500 hover:text-white transition-colors p-2 rounded-md hover:bg-white/[0.05]">
-            <RefreshCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
-          </button>
-        </div>
+      <div className="mb-5">
+        <h1 className="mb-3 text-[32px] font-bold leading-tight text-[#070707]">Activity</h1>
+        <p className="text-[15px] text-[#5f6472]">
+          View previously run actions and playbooks, including execution status, duration, actor, and response details.
+        </p>
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex items-center gap-1 border-b border-white/[0.07] mb-5">
-        {FILTERS.map((f) => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
-              filter === f ? "border-[#2261db] text-white" : "border-transparent text-gray-500 hover:text-gray-300"
-            }`}>
-            {f}
-            <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full bg-white/[0.06] text-gray-500">
-              {events.filter((e) => !dismissed.includes(e.id) && (f === "All" || (f === "Alerts" && e.type === "alert") || (f === "Actions" && e.type === "success") || (f === "Info" && e.type === "info"))).length}
-            </span>
+      <div className="mb-4 flex items-center gap-1">
+        {TABS.map((item) => (
+          <button
+            key={item}
+            onClick={() => setTab(item)}
+            className={`rounded border px-3 py-1.5 text-[15px] transition-colors ${
+              tab === item ? "border-[#2563eb] bg-white text-[#070707]" : "border-transparent text-[#5f6472] hover:bg-white"
+            }`}
+          >
+            {item}
           </button>
         ))}
       </div>
 
-      {/* Event list */}
-      <div className="border border-white/[0.07] rounded-xl overflow-hidden">
-        <div className="divide-y divide-white/[0.05] bg-[#131313]">
-          {filtered.length === 0 && (
-            <div className="py-12 text-center text-gray-600 text-sm">No events to display.</div>
-          )}
-          {filtered.map((event) => {
-            const Icon = event.type === "success" ? CheckCircle2 : event.type === "alert" ? AlertCircle : Info
-            const iconColor = event.type === "success" ? "text-emerald-400" : event.type === "alert" ? "text-amber-400" : "text-blue-400"
-            const bgColor = event.type === "success" ? "bg-emerald-400/5" : event.type === "alert" ? "bg-amber-400/5" : "bg-blue-400/5"
-            const isExpanded = expandedId === event.id
-
-            return (
-              <div key={event.id}>
-                <div className="flex items-start gap-4 px-5 py-4 hover:bg-white/[0.02] transition-colors group">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${bgColor}`}>
-                    <Icon className={`w-4 h-4 ${iconColor}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-medium leading-snug">{event.title}</p>
-                    <p className="text-gray-500 text-xs mt-0.5 leading-relaxed">{event.detail}</p>
-                    <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-                      <span className="text-gray-600 text-[11px]">{event.time}</span>
-                      <span className="text-gray-700 text-[10px]">•</span>
-                      <span className="text-gray-600 text-[11px]">{event.user}</span>
-                      {event.caseId && (
-                        <>
-                          <span className="text-gray-700 text-[10px]">•</span>
-                          <span className="text-[11px] text-[#00cfff]">Case #{event.caseId}</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => setExpandedId(isExpanded ? null : event.id)}
-                      className="text-gray-500 hover:text-white p-1 rounded hover:bg-white/[0.05] transition-colors">
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-                    </button>
-                    <button onClick={() => dismiss(event.id)} className="text-gray-600 hover:text-red-400 p-1 rounded hover:bg-white/[0.05] transition-colors">
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                {isExpanded && (
-                  <div className="px-17 py-4 bg-[#0f0f0f] border-t border-white/[0.05] pl-[76px]">
-                    <div className="grid grid-cols-3 gap-4 text-xs mb-3">
-                      <div><p className="text-gray-600 mb-0.5">Source</p><p className="text-gray-300">{event.source}</p></div>
-                      <div><p className="text-gray-600 mb-0.5">Duration</p><p className="text-[#00cfff]">{event.duration}</p></div>
-                      <div><p className="text-gray-600 mb-0.5">Triggered by</p><p className="text-gray-300">{event.user}</p></div>
-                    </div>
-                    {event.actions.length > 0 && (
-                      <div className="mb-3">
-                        <p className="text-gray-600 text-xs mb-1.5">Actions executed:</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {event.actions.map((a) => (
-                            <span key={a} className="text-[10px] px-2 py-1 rounded-md bg-emerald-400/10 border border-emerald-400/20 text-emerald-400">{a}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {event.caseId && (
-                      <button className="text-xs text-[#00cfff] hover:underline">View Case #{event.caseId} →</button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+      <div className="mb-4 flex items-center gap-4">
+        <button className="flex h-12 items-center gap-2 rounded border border-[#d7dce3] bg-white px-3 text-[15px] text-[#070707] transition-colors hover:bg-[#f8fafc]">
+          <Filter className="h-4 w-4" />
+          Filters
+        </button>
+        <div className="relative min-w-0 flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#697386]" />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search for Integration, Name or Description"
+            className="h-12 w-full rounded border border-[#d7dce3] bg-white pl-10 pr-4 text-[15px] outline-none transition-colors focus:border-[#2563eb]"
+          />
         </div>
+        <span className="ml-4 text-[17px] text-[#5f6472]">{refreshNote}</span>
+        <button onClick={refresh} className="rounded border border-[#d7dce3] bg-white p-2 text-[#070707] hover:bg-[#f8fafc]" aria-label="Refresh activity">
+          <RefreshCw className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} />
+        </button>
+      </div>
+
+      <div className="mb-4 grid grid-cols-4 gap-4">
+        <div className="rounded border border-[#d7dce3] bg-white p-4">
+          <p className="text-sm text-[#5f6472]">Completed runs</p>
+          <p className="mt-1 text-2xl font-semibold text-[#070707]">37</p>
+        </div>
+        <div className="rounded border border-[#d7dce3] bg-white p-4">
+          <p className="text-sm text-[#5f6472]">Queued</p>
+          <p className="mt-1 text-2xl font-semibold text-[#070707]">1</p>
+        </div>
+        <div className="rounded border border-[#d7dce3] bg-white p-4">
+          <p className="text-sm text-[#5f6472]">Average duration</p>
+          <p className="mt-1 text-2xl font-semibold text-[#070707]">3.8s</p>
+        </div>
+        <div className="rounded border border-[#d7dce3] bg-white p-4">
+          <p className="text-sm text-[#5f6472]">Policy-triggered</p>
+          <p className="mt-1 text-2xl font-semibold text-[#070707]">24</p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded border border-[#d7dce3] bg-white">
+        <div className="grid gap-4 border-b border-[#d7dce3] bg-[#fbfbfc] px-4 py-3 text-[15px] text-[#070707]" style={{ gridTemplateColumns: ".65fr 1.35fr 2fr .75fr .7fr .9fr .7fr" }}>
+          <div>ID</div>
+          <div>Name</div>
+          <div>Description</div>
+          <div>Integration</div>
+          <div>Status</div>
+          <div>Actor</div>
+          <div>Time</div>
+        </div>
+        <div className="divide-y divide-[#d7dce3]">
+          {filtered.map((row) => (
+            <div key={row.id} className="grid items-center gap-4 px-4 py-4 text-[15px] text-[#070707] transition-colors hover:bg-[#f8fafc]" style={{ gridTemplateColumns: ".65fr 1.35fr 2fr .75fr .7fr .9fr .7fr" }}>
+              <span className="font-mono text-sm text-[#697386]">{row.id}</span>
+              <span className="font-medium">{row.name}</span>
+              <span className="truncate text-[#5f6472]">{row.description}</span>
+              <span>{row.integration}</span>
+              <span className={`inline-flex w-fit items-center gap-1.5 rounded border px-2 py-1 text-sm ${
+                row.status === "Completed" ? "border-[#b7ebc6] bg-[#ecfdf3] text-[#166534]" : "border-[#fedf89] bg-[#fffaeb] text-[#92400e]"
+              }`}>
+                {row.status === "Completed" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Clock3 className="h-3.5 w-3.5" />}
+                {row.status}
+              </span>
+              <span className="truncate text-[#5f6472]">{row.actor}</span>
+              <span className="text-[#5f6472]">{row.time}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 rounded border border-[#d7dce3] bg-white p-4">
+        <div className="mb-2 flex items-center gap-2 text-[#070707]">
+          {spinning ? <Loader2 className="h-4 w-4 animate-spin text-[#2563eb]" /> : <ShieldAlert className="h-4 w-4 text-[#2563eb]" />}
+          <p className="font-medium">Latest response summary</p>
+        </div>
+        <p className="text-[15px] text-[#5f6472]">
+          Company #1 has 5 high-priority response items in the last 24 hours. Four were completed automatically and one endpoint isolation request is queued for analyst approval.
+        </p>
       </div>
     </div>
   )
