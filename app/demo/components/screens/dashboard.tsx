@@ -369,17 +369,18 @@ export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
       )}
 
       {activeTab === "Automation Settings" && (
-        <div className="max-w-2xl space-y-3">
+        <div className="max-w-3xl space-y-3">
           <p className={`mb-5 text-[15px] ${txtSub}`}>Configure how AIR handles automated containment, approvals, and notifications.</p>
           {automationSettings.map((setting, index) => (
-            <div key={setting.label} className={`flex items-center justify-between rounded border p-4 transition-colors ${bgCard} ${border} ${bgHover}`}>
-              <div className="flex items-center gap-3 min-w-0 pr-4">
+            <div key={setting.label} className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded border p-4 transition-colors ${bgCard} ${border} ${bgHover}`}>
+              <div className="flex min-w-0 items-center gap-3">
                 {setting.label.includes("Notify") ? <Bell className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" /> : setting.label.includes("approval") ? <Shield className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" /> : <AlertCircle className="h-4 w-4 flex-shrink-0 text-[#3b82f6]" />}
-                <p className={`text-[15px] ${txtPri}`}>{setting.label}</p>
+                <p className={`min-w-0 text-[15px] ${txtPri}`}>{setting.label}</p>
               </div>
               <button
                 onClick={() => toggleAutomation(index)}
-                className={`relative h-6 w-11 flex-shrink-0 rounded-full transition-colors ${setting.enabled ? "bg-[#2563eb]" : dark ? "bg-[#2a2d3a]" : "bg-[#d7dce3]"}`}
+                className={`relative h-6 w-11 flex-shrink-0 overflow-hidden rounded-full transition-colors ${setting.enabled ? "bg-[#2563eb]" : dark ? "bg-[#2a2d3a]" : "bg-[#d7dce3]"}`}
+                aria-label={`Toggle ${setting.label}`}
                 aria-pressed={setting.enabled}
               >
                 <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white shadow-sm transition-transform ${setting.enabled ? "translate-x-[22px]" : "translate-x-[3px]"}`} />
