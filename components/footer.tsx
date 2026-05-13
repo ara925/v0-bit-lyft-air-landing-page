@@ -104,7 +104,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-400">© 2025 BitLyft. All rights reserved.</p>
+          <p className="text-sm text-gray-400">© 2026 BitLyft. All rights reserved.</p>
           <div className="flex gap-6 text-sm text-gray-400">
             <Link href="/privacy" className="hover:text-primary transition-colors">
               Privacy Policy
