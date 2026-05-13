@@ -64,40 +64,6 @@ export default function PartnersPage() {
           </div>
         </div>
 
-        {/* Integration Categories */}
-        <div className="max-w-6xl mx-auto mb-20">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">Integration Categories</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">SIEM & Log Management</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li>• Splunk</li>
-                <li>• Microsoft Sentinel</li>
-                <li>• Elastic</li>
-                <li>• Sumo Logic</li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Endpoint Security</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li>• CrowdStrike</li>
-                <li>• Microsoft Defender</li>
-                <li>• SentinelOne</li>
-                <li>• Carbon Black</li>
-              </ul>
-            </div>
-            <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-white mb-4">Cloud Security</h3>
-              <ul className="space-y-2 text-gray-300">
-                <li>• AWS Security Hub</li>
-                <li>• Azure Security Center</li>
-                <li>• Google Cloud Security</li>
-                <li>• Cloudflare</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
         {/* CTA Section */}
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-lg p-12">
