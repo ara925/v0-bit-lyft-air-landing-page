@@ -6,6 +6,14 @@ import { CheckCircle2, Filter, Loader2, Play, RefreshCw, Search, Settings } from
 
 const PLAYBOOKS = [
   {
+    name: "Mailbox Forwarding Rule Detection",
+    description: "Automatically discovers suspicious mailbox forwarding rules, alerts analysts, removes unauthorized rules, and revokes user sessions.",
+    integration: "Microsoft",
+    actions: 5,
+    trigger: "Scheduled scan or new rule created",
+    lastRun: "8 min ago",
+  },
+  {
     name: "Microsoft Compromised User Accounts",
     description: "Respond to suspected account compromise by revoking sessions, resetting credentials, and enforcing MFA.",
     integration: "Microsoft",

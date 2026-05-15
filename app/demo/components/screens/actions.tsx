@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ArrowUp, CheckCircle2, Loader2, Play, RefreshCw, Search, Settings, SlidersHorizontal, X } from "lucide-react"
 
 const ACTIONS = [
+  { name: "List Mailbox Forwarding Rules", description: "Discovers all inbox forwarding rules across user mailboxes and flags suspicious external destinations.", integration: "Microsoft", category: "SEC OPS" },
   { name: "Enable Microsoft 365 Audit Subscriptions", description: "Turns on management API audit logging for General, Exchange, SharePoint, and Entra ID workloads.", integration: "Microsoft", category: "IT OPS" },
   { name: "List Microsoft 365 Audit Subscriptions", description: "Lists active management API audit subscriptions and workload status.", integration: "Microsoft", category: "IT OPS" },
   { name: "Assign User to Conditional Access Policy", description: "Adds a user to a conditional access policy used for containment.", integration: "Microsoft", category: "SEC OPS" },
@@ -70,6 +71,7 @@ export default function ActionsScreen({ dark = false }: { dark?: boolean }) {
 
     const target = inputValues[name] || "alex.rivera@company1.example"
     const outputs: Record<string, string> = {
+      "List Mailbox Forwarding Rules": "Found 3 forwarding rules: alex.rivera → external-cfo-review@gmail.com (suspicious), morgan.lee → backup@company1.example (internal), jordan.kim → partner@supplier.com (external). 1 rule flagged for review.",
       "Revoke User Sign-In Sessions": `Successfully revoked 3 active sessions for ${target}.`,
       "Disable User Account": `Account disabled for ${target}; sign-in blocked in Entra ID.`,
       "Remove Mailbox Forwarding Rule": `Forwarding rule "External CFO Review" deleted from ${target}.`,
