@@ -258,7 +258,10 @@
   background-color: transparent !important;
 }
 
-.demo-product-shell[data-demo-theme="dark"] aside,
+.demo-product-shell[data-demo-theme="dark"] aside {
+  background-color: #13141a !important;
+}
+
 .demo-product-shell[data-demo-theme="dark"] header {
   background-color: #111111 !important;
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { AlertCircle, Bell, CheckCircle2, ChevronRight, FileText, Loader2, Plus, RefreshCw, Search, Shield, SlidersHorizontal, X, Zap } from "lucide-react"
+import { AlertCircle, Bell, CheckCircle2, ChevronRight, Filter, Loader2, Plus, RefreshCw, Settings as SettingsIcon, Shield, SlidersHorizontal, X } from "lucide-react"
 
 const TABS = ["Overview", "Case Management", "Policy Management", "Automation Settings"] as const
 
@@ -120,6 +120,7 @@ export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
   }
 
   const periodMultiplier = period === "Last 30 days" ? 4 : period === "Last 90 days" ? 12 : 1
+  const totalEventsProcessed = period === "Last 7 days" ? "3.4K" : period === "Last 30 days" ? "13.6K" : "40.8K"
 
   // Dark mode tokens
   const bg      = dark ? "bg-[#0d0d0f]"   : "bg-white"
@@ -185,9 +186,9 @@ export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
 
           <div className="mb-4 grid grid-cols-3 gap-4">
             <MetricCard label="Log Volume" value={`${(101.21 * periodMultiplier).toFixed(2)} KB`} dark={dark} />
-            <MetricCard label="MTTD Manual" value="0" dark={dark} />
-            <MetricCard label="MTTR Manual" value="0" dark={dark} />
-            <MetricCard label="Total Events Processed" value={41 * periodMultiplier} tone="blue" onClick={() => setActiveTab("Case Management")} dark={dark} />
+            <MetricCard label="MTTD Manual" value="10h" dark={dark} />
+            <MetricCard label="MTTR Manual" value="10h" dark={dark} />
+            <MetricCard label="Total Events Processed" value={totalEventsProcessed} onClick={() => setActiveTab("Case Management")} dark={dark} />
             <MetricCard label="MTTD Automated" value="0.9s" tone="blue" dark={dark} />
             <MetricCard label="MTTR Automated" value="1.2s" tone="green" dark={dark} />
           </div>
@@ -328,38 +329,48 @@ export default function DashboardScreen({ dark = false }: { dark?: boolean }) {
 
       {activeTab === "Policy Management" && (
         <div>
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-[15px] text-[#5f6472]">Manage detection rules and automated response policies.</p>
-            <button className="inline-flex items-center gap-1.5 rounded bg-[#2563eb] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1d4ed8]">
-              <Plus className="h-4 w-4" />
-              New Policy
+          <div className="mb-6 flex flex-wrap items-center gap-4">
+            <button className={`inline-flex h-12 items-center gap-2 rounded border px-4 text-sm font-semibold transition-colors ${bgCard} ${border} ${txtPri} ${bgHover}`}>
+              <Filter className="h-4 w-4" />
+              Filters
+            </button>
+            <label className="min-w-[260px] flex-1">
+              <span className="sr-only">Search for Policy Name</span>
+              <input
+                className={`h-12 w-full rounded border px-4 text-[15px] outline-none transition-colors placeholder:text-[#7c8394] focus:border-[#2563eb] ${input}`}
+                placeholder="Search for Policy Name"
+              />
+            </label>
+            <span className={`ml-auto text-[15px] ${txtSub}`}>Last updated: {lastUpdated}</span>
+            <button onClick={refresh} className={`rounded border p-3 transition-colors ${bgCard} ${border} ${txtPri} ${bgHover}`} aria-label="Refresh policies">
+              <RefreshCw className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} />
             </button>
           </div>
-          <div className="overflow-hidden rounded border border-[#d7dce3] bg-white">
-            <div className="grid gap-4 border-b border-[#d7dce3] bg-[#fbfbfc] px-5 py-3 text-sm text-[#070707]" style={{ gridTemplateColumns: "1.5fr 1.5fr .6fr .7fr .7fr auto" }}>
-              <div>Policy Name</div>
-              <div>Trigger</div>
-              <div>Actions</div>
-              <div>Last Fired</div>
-              <div>Status</div>
+          <div className={`overflow-hidden rounded border ${dark ? "border-[#2d3038] bg-[#101012]" : "border-[#d7dce3] bg-white"}`}>
+            <div className={`grid items-center gap-4 border-b px-5 py-3 text-sm font-semibold ${dark ? "border-[#333640] bg-[#242424] text-[#f8fafc]" : "border-[#d7dce3] bg-[#fbfbfc] text-[#070707]"}`} style={{ gridTemplateColumns: "minmax(0,1fr) 140px 56px" }}>
+              <div>Name</div>
+              <div className="text-center">Status</div>
               <div />
             </div>
-            <div className="divide-y divide-[#d7dce3]">
+            <div className={`divide-y ${dark ? "divide-[#333640]" : "divide-[#d7dce3]"}`}>
               {POLICIES.map((policy) => (
-                <div key={policy.name} className="grid items-center gap-4 px-5 py-4 transition-colors hover:bg-[#f8fafc]" style={{ gridTemplateColumns: "1.5fr 1.5fr .6fr .7fr .7fr auto" }}>
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 flex-shrink-0 text-[#2563eb]" />
-                    <span className="text-[15px] font-medium text-[#070707]">{policy.name}</span>
+                <div key={policy.name} className={`grid items-center gap-4 px-5 py-4 transition-colors ${dark ? "hover:bg-[#17181d]" : "hover:bg-[#f8fafc]"}`} style={{ gridTemplateColumns: "minmax(0,1fr) 140px 56px" }}>
+                  <div className="min-w-0">
+                    <p className={`truncate text-[15px] font-semibold ${txtPri}`}>{policy.name}</p>
+                    <p className={`mt-1 truncate text-sm ${txtSub}`}>{policy.trigger} - {policy.actions} automated actions - last fired {policy.lastFired}</p>
                   </div>
-                  <span className="text-sm text-[#5f6472]">{policy.trigger}</span>
-                  <span className="text-[15px] text-[#070707]">{policy.actions}</span>
-                  <span className="text-sm text-[#5f6472]">{policy.lastFired}</span>
-                  <span className={`w-fit rounded border px-2 py-1 text-sm ${policyStatuses[policy.name] === "Active" ? "border-[#b7ebc6] bg-[#ecfdf3] text-[#166534]" : "border-[#d7dce3] bg-[#f7f8fa] text-[#5f6472]"}`}>{policyStatuses[policy.name]}</span>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => togglePolicy(policy.name)} className="rounded border border-[#d7dce3] bg-white px-2.5 py-1 text-sm text-[#070707] transition-colors hover:bg-[#f8fafc]">
-                      {policyStatuses[policy.name] === "Active" ? "Pause" : "Enable"}
+                  <button
+                    onClick={() => togglePolicy(policy.name)}
+                    className="mx-auto rounded-full p-1"
+                    aria-label={`${policyStatuses[policy.name] === "Active" ? "Pause" : "Enable"} ${policy.name}`}
+                    title={policyStatuses[policy.name]}
+                  >
+                    <CheckCircle2 className={`h-5 w-5 ${policyStatuses[policy.name] === "Active" ? "text-[#00d46a]" : txtSub}`} />
+                  </button>
+                  <div className="flex justify-end">
+                    <button className={`rounded border p-2 transition-colors ${bgCard} ${border} ${txtPri} ${bgHover}`} aria-label={`Configure ${policy.name}`}>
+                      <SettingsIcon className="h-4 w-4" />
                     </button>
-                    <button className="rounded border border-[#d7dce3] bg-white px-2.5 py-1 text-sm text-[#070707] transition-colors hover:bg-[#f8fafc]">Edit</button>
                   </div>
                 </div>
               ))}
