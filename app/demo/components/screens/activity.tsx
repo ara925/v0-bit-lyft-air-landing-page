@@ -6,7 +6,8 @@ import { CheckCircle2, Clock3, Filter, Loader2, RefreshCw, Search, ShieldAlert }
 const TABS = ["Actions", "Playbooks"] as const
 
 const ACTION_ACTIVITY = [
-  { id: "ACT-1042", name: "Revoke User Sign-In Sessions", integration: "Microsoft", description: "Revoked 3 active sessions for alex.rivera@company1.example.", status: "Completed", duration: "1.2s", actor: "Security Admin", time: "2 min ago" },
+  { id: "ACT-1043", name: "List Mailbox Forwarding Rules", integration: "Microsoft", description: "Scanned 142 mailboxes; found 3 forwarding rules, 1 flagged as suspicious (external-cfo-review@gmail.com).", status: "Completed", duration: "2.4s", actor: "Scheduled scan", time: "8 min ago" },
+  { id: "ACT-1042", name: "Revoke User Sign-In Sessions", integration: "Microsoft", description: "Revoked 3 active sessions for alex.rivera@company1.example.", status: "Completed", duration: "1.2s", actor: "Security Admin", time: "12 min ago" },
   { id: "ACT-1041", name: "Remove Mailbox Forwarding Rule", integration: "Microsoft", description: "Removed external forwarding rule from finance@company1.example.", status: "Completed", duration: "1.8s", actor: "Policy: BEC Forwarding Rule", time: "14 min ago" },
   { id: "ACT-1040", name: "Get User Sign-In Activity", integration: "Microsoft", description: "Collected 12 sign-in events for morgan.lee@company1.example.", status: "Completed", duration: "0.9s", actor: "Security Admin", time: "33 min ago" },
   { id: "ACT-1039", name: "List Entra ID Risky Users", integration: "Microsoft", description: "Found 2 risky users with high or medium risk.", status: "Completed", duration: "0.7s", actor: "Scheduled check", time: "1h ago" },
@@ -15,7 +16,8 @@ const ACTION_ACTIVITY = [
 ]
 
 const PLAYBOOK_ACTIVITY = [
-  { id: "PB-221", name: "Microsoft Compromised User Accounts", integration: "Microsoft", description: "Revoked sessions, reset password, enabled MFA, and opened case #4821.", status: "Completed", duration: "8.4s", actor: "Policy: Credential Stuffing Detection", time: "12 min ago" },
+  { id: "PB-222", name: "Mailbox Forwarding Rule Detection", integration: "Microsoft", description: "Discovered 1 suspicious rule → removed forwarding to external-cfo-review@gmail.com, revoked user sessions, notified analyst.", status: "Completed", duration: "6.2s", actor: "Scheduled scan", time: "8 min ago" },
+  { id: "PB-221", name: "Microsoft Compromised User Accounts", integration: "Microsoft", description: "Revoked sessions, reset password, enabled MFA, and opened case #4821.", status: "Completed", duration: "8.4s", actor: "Policy: Credential Stuffing Detection", time: "22 min ago" },
   { id: "PB-220", name: "Microsoft Phishing Email Containment", integration: "Microsoft", description: "Purged 26 matching messages and quarantined 2 sender domains.", status: "Completed", duration: "12.9s", actor: "Defender alert", time: "1h ago" },
   { id: "PB-219", name: "SharePoint Data Exfiltration Review", integration: "Microsoft", description: "Collected file activity and restricted sharing for Project Atlas.", status: "Completed", duration: "9.8s", actor: "Policy: Mass File Download", time: "5h ago" },
   { id: "PB-218", name: "Privileged Account Lockdown", integration: "Microsoft", description: "Revoked admin sessions and required re-authentication for 2 accounts.", status: "Completed", duration: "7.1s", actor: "Security Admin", time: "Yesterday" },
