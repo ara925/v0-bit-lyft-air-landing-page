@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description:
       "Stop email impersonation attacks fast. Learn how to automate domain blocks, sender quarantine, and user protection steps before financial or reputational damage occurs.",
     type: "article",
-    publishedTime: "2026-05-1",
+    publishedTime: "2026-06-09",
   },
 }
 
@@ -65,7 +65,7 @@ export default function EmailImpersonationResponsePage() {
               <span className="px-3 py-1 bg-orange-500/20 text-orange-400 text-sm font-medium rounded-full">
                 Incident Response
               </span>
-              <span className="text-gray-500">1st May, 2026</span>
+              <span className="text-gray-500">9th June, 2026</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">

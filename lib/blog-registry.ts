@@ -337,6 +337,6 @@ export const blogPosts: BlogPost[] = [
       "Learn how to automate email impersonation response by blocking lookalike domains, purging delivered emails org-wide, and executing tiered user protection steps in seconds—not hours.",
     category: "Industry Insights",
     type: "Article",
-    displayDate: "1st May, 2026",
+    displayDate: "9th June, 2026",
   },
 ]
