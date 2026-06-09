@@ -330,4 +330,13 @@ export const blogPosts: BlogPost[] = [
     type: "Article",
     displayDate: "28th April, 2026",
   },
+  {
+    slug: "email-impersonation-response-automate-domain-blocks-user-protection",
+    title: "Email Impersonation Response: Automate Domain Blocks and User Protection Steps",
+    description:
+      "Learn how to automate email impersonation response by blocking lookalike domains, purging delivered emails org-wide, and executing tiered user protection steps in seconds—not hours.",
+    category: "Industry Insights",
+    type: "Article",
+    displayDate: "1st May, 2026",
+  },
 ]
