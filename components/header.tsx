@@ -137,12 +137,6 @@ export function Header() {
                   >
                     Blog
                   </Link>
-                  <Link
-                    href="/cybersecurity-glossary"
-                    className="block px-4 py-3 text-sm text-gray-300 hover:text-primary hover:bg-primary/5 transition-colors"
-                  >
-                    Cybersecurity Glossary
-                  </Link>
                 </div>
               </div>
             )}
