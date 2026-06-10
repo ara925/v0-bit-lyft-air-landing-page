@@ -8,6 +8,7 @@ import { useState } from "react"
 export function Header() {
   const [showSolutions, setShowSolutions] = useState(false)
   const [showIndustries, setShowIndustries] = useState(false)
+  const [showResources, setShowResources] = useState(false)
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-gradient-to-r from-[#000a0e]/95 via-[#001419]/95 to-[#000a0e]/95 backdrop-blur-xl shadow-lg shadow-black/30">
@@ -111,10 +112,41 @@ export function Header() {
               </div>
             )}
           </div>
-          <Link href="/resources" className="text-sm text-gray-300 hover:text-primary transition-colors relative group">
-            Resources
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all" />
-          </Link>
+          <div
+            className="relative"
+            onMouseEnter={() => setShowResources(true)}
+            onMouseLeave={() => setShowResources(false)}
+          >
+            <button className="text-sm text-gray-300 hover:text-primary transition-colors relative group flex items-center gap-1 py-2">
+              Resources
+              <ChevronDown className="w-4 h-4" />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all" />
+            </button>
+            {showResources && (
+              <div className="absolute top-full left-0 pt-2">
+                <div className="w-64 bg-[#000a0e]/95 backdrop-blur-xl border border-border rounded-lg shadow-2xl shadow-black/40 py-2">
+                  <Link
+                    href="/resources"
+                    className="block px-4 py-3 text-sm text-gray-300 hover:text-primary hover:bg-primary/5 transition-colors border-b border-border/30"
+                  >
+                    All Resources
+                  </Link>
+                  <Link
+                    href="/blog"
+                    className="block px-4 py-3 text-sm text-gray-300 hover:text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    Blog
+                  </Link>
+                  <Link
+                    href="/cybersecurity-glossary"
+                    className="block px-4 py-3 text-sm text-gray-300 hover:text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    Cybersecurity Glossary
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
           <Link href="/demo" className="text-sm text-gray-300 hover:text-primary transition-colors relative group flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Live Demo
