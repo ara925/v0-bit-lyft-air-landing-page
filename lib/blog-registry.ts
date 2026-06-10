@@ -339,4 +339,13 @@ export const blogPosts: BlogPost[] = [
     type: "Article",
     displayDate: "9th June, 2026",
   },
+  {
+    slug: "microsoft-365-mailbox-rule-abuse-detection-automated-cleanup",
+    title: "Microsoft 365 Mailbox Rule Abuse: Detection and Automated Cleanup",
+    description:
+      "Learn how attackers abuse Microsoft 365 inbox rules to hide their activity, and how to detect malicious mailbox rules and automate cleanup org-wide in seconds—not hours.",
+    category: "Industry Insights",
+    type: "Article",
+    displayDate: "10th June, 2026",
+  },
 ]
