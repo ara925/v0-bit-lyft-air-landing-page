@@ -348,4 +348,13 @@ export const blogPosts: BlogPost[] = [
     type: "Article",
     displayDate: "10th June, 2026",
   },
+  {
+    slug: "detecting-removing-malicious-inbox-rules-step-by-step-workflow",
+    title: "Detecting and Removing Malicious Inbox Rules: Step-by-Step Workflow",
+    description:
+      "A complete step-by-step workflow for detecting and removing malicious Microsoft 365 inbox rules—from alert trigger to forensic snapshot, removal, verification, and post-incident review.",
+    category: "Industry Insights",
+    type: "Article",
+    displayDate: "1st July, 2026",
+  },
 ]
