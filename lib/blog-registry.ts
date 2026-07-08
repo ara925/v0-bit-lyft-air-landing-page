@@ -357,4 +357,13 @@ export const blogPosts: BlogPost[] = [
     type: "Article",
     displayDate: "1st July, 2026",
   },
+  {
+    slug: "ransomware-early-indicators-automated-containment-actions",
+    title: "Ransomware Early Indicators and Automated Containment Actions",
+    description:
+      "Learn the earliest warning signs of a ransomware attack and the automated containment actions—host isolation, account disablement, and credential revocation—that stop encryption before it spreads.",
+    category: "Industry Insights",
+    type: "Article",
+    displayDate: "8th July, 2026",
+  },
 ]
